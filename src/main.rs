@@ -107,10 +107,34 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("   {}: {}", "Valid from".cyan(), x509.validity().not_before);
         println!("   {}:   {}", "Valid to".cyan(), x509.validity().not_after);
         println!("   {}:    {}", "Serial".cyan(), x509.raw_serial_as_string());
-        
-        println!("   {}: {}", "Algorithm".cyan(), x509.public_key().algorithm.algorithm.to_id_string());
-        println!("   {}: {}", "Signature Algorithm".cyan(), x509.signature_algorithm.algorithm.to_id_string());
+
+        let pk_oid = x509.public_key().algorithm.algorithm.to_id_string();
+        println!(
+            "   {}: {}",
+            "Algorithm".cyan(),
+            oid_to_friendly_name(&pk_oid)
+        );
+
+        let sig_oid = x509.signature_algorithm.algorithm.to_id_string();
+        println!(
+            "   {}: {}",
+            "Signature Algorithm".cyan(),
+            oid_to_friendly_name(&sig_oid)
+        );
     }
 
     Ok(())
+}
+
+fn oid_to_friendly_name(oid: &str) -> &str {
+    // This is a small subset of common OIDs.
+    // The official registry is maintained by IANA.
+    // Example: https://oid-base.com/cgi-bin/display?oid=1.2.840.10045.2.1&a=display
+    match oid {
+        "1.2.840.10045.2.1" => "ecPublicKey",
+        "1.2.840.113549.1.1.1" => "rsaEncryption",
+        "1.2.840.113549.1.1.11" => "sha256WithRSAEncryption",
+        "1.2.840.10045.4.3.2" => "ecdsa-with-SHA256",
+        _ => oid,
+    }
 }
