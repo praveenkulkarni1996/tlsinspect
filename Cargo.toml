@@ -2,6 +2,13 @@
 name = "tlsinspect"
 version = "0.1.0"
 edition = "2024"
+authors = ["Praveen Pramod Kulkarni <praveenkulkarni1996@gmail.com>"]
+description = "A CLI for inspecting TLS certificate chains and IP overrides."
+license = "MIT"
+repository = "https://github.com/praveenkulkarni1996/tlsinspect"
+readme = "README.md"
+keywords = ["tls", "ssl", "certificate", "network", "cli"]
+categories = ["command-line-utilities", "network-programming"]
 
 [dependencies]
 clap = { version = "4.5.53", features = ["derive"] }
