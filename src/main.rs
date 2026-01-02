@@ -1,6 +1,5 @@
 use clap::Parser;
 use colored::Colorize;
-use oid_registry::OidRegistry;
 use rustls::pki_types::ServerName;
 use rustls::{ClientConfig, RootCertStore};
 use std::sync::Arc;
@@ -61,7 +60,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 4. Start TLS Handshake using the SNI name
     let tls_stream = connector.connect(sni_host, stream).await?;
 
-    let registry = OidRegistry::default().with_crypto();
+    let registry = x509_parser::oid_registry::OidRegistry::default().with_crypto();
 
     // 5. Inspect Chain
     let (_, session) = tls_stream.get_ref();

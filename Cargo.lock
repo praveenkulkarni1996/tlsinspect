@@ -652,7 +652,6 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "colored",
- "oid-registry",
  "rustls",
  "tokio",
  "tokio-rustls",
