@@ -6,39 +6,6 @@ use tokio::net::TcpStream;
 use tokio_rustls::TlsConnector;
 use x509_parser::prelude::*;
 
-/// # TLS Inspect CLI
-///
-/// A command-line tool for inspecting TLS/SSL certificates and connections.
-///
-/// ## Usage
-///
-/// ```bash
-/// tlsinspect [OPTIONS] <COMMAND>
-/// ```
-///
-/// ## Examples
-///
-/// ```bash
-/// # Inspect a certificate from a domain
-/// tlsinspect inspect example.com
-///
-/// # Show certificate details with verbose output
-/// tlsinspect inspect example.com --verbose
-///
-/// # Verify certificate chain
-/// tlsinspect verify --cert path/to/cert.pem
-///
-/// # Check certificate expiration
-/// tlsinspect check example.com --expiry
-/// ```
-///
-/// ## Features
-///
-/// - Retrieve and display TLS certificate information
-/// - Verify certificate chains and validity
-/// - Check certificate expiration dates
-/// - Inspect certificate extensions and attributes
-/// - Support for multiple certificate formats
 use clap::Parser;
 
 #[derive(Parser, Debug)]
