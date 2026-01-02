@@ -5,7 +5,7 @@ use rustls::{ClientConfig, RootCertStore};
 use std::sync::Arc;
 use tokio::net::TcpStream;
 use tokio_rustls::TlsConnector;
-use x509_parser::prelude::*;
+use x509_parser::prelude::{FromDer, X509Certificate};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
