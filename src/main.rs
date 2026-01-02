@@ -1,3 +1,4 @@
+use clap::Parser;
 use colored::Colorize;
 use rustls::pki_types::ServerName;
 use rustls::{ClientConfig, RootCertStore};
@@ -5,8 +6,6 @@ use std::sync::Arc;
 use tokio::net::TcpStream;
 use tokio_rustls::TlsConnector;
 use x509_parser::prelude::*;
-
-use clap::Parser;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
