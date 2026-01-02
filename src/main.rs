@@ -1,4 +1,11 @@
 use colored::Colorize;
+use rustls::pki_types::ServerName;
+use rustls::{ClientConfig, RootCertStore};
+use std::sync::Arc;
+use tokio::net::TcpStream;
+use tokio_rustls::TlsConnector;
+use x509_parser::prelude::*;
+
 /// # TLS Inspect CLI
 ///
 /// A command-line tool for inspecting TLS/SSL certificates and connections.
@@ -33,12 +40,6 @@ use colored::Colorize;
 /// - Inspect certificate extensions and attributes
 /// - Support for multiple certificate formats
 use clap::Parser;
-use rustls::pki_types::ServerName;
-use rustls::{ClientConfig, RootCertStore};
-use std::sync::Arc;
-use tokio::net::TcpStream;
-use tokio_rustls::TlsConnector;
-use x509_parser::prelude::*;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about)]
@@ -106,7 +107,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("   {}: {}", "Valid from".cyan(), x509.validity().not_before);
         println!("   {}:   {}", "Valid to".cyan(), x509.validity().not_after);
         println!("   {}:    {}", "Serial".cyan(), x509.raw_serial_as_string());
-        println!("   {}: {}", "Algorithm".cyan(), x509.public_key().algorithm.algorithm);
+        
+        println!("   {}: {}", "Algorithm".cyan(), x509.public_key().algorithm.algorithm.to_id_string());
+        println!("   {}: {}", "Signature Algorithm".cyan(), x509.signature_algorithm.algorithm.to_id_string());
     }
 
     Ok(())
