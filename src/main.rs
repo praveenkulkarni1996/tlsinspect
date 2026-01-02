@@ -101,8 +101,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let (_, x509) = X509Certificate::from_der(cert.as_ref())?;
 
         println!("[{}] {}", label, x509.subject());
-        println!("   Algorithm: {}", x509.public_key().algorithm.algorithm);
+        println!("   Issuer:    {}", x509.issuer());
+        println!("   Valid from: {}", x509.validity().not_before);
+        println!("   Valid to:   {}", x509.validity().not_after);
         println!("   Serial:    {}", x509.raw_serial_as_string());
+        println!("   Algorithm: {}", x509.public_key().algorithm.algorithm);
     }
 
     Ok(())
