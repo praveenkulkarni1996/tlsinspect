@@ -1,5 +1,6 @@
 use clap::Parser;
 use colored::Colorize;
+use oid_registry::OidRegistry;
 use rustls::pki_types::ServerName;
 use rustls::{ClientConfig, RootCertStore};
 use std::sync::Arc;
@@ -60,6 +61,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 4. Start TLS Handshake using the SNI name
     let tls_stream = connector.connect(sni_host, stream).await?;
 
+    let registry = OidRegistry::default().with_crypto();
+
     // 5. Inspect Chain
     let (_, session) = tls_stream.get_ref();
     let cert_chain = session.peer_certificates().ok_or("No certs found")?;
@@ -74,33 +77,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("   {}:   {}", "Valid to".cyan(), x509.validity().not_after);
         println!("   {}:    {}", "Serial".cyan(), x509.raw_serial_as_string());
 
-        let pk_oid = x509.public_key().algorithm.algorithm.to_id_string();
         println!(
             "   {}: {}",
             "Algorithm".cyan(),
-            oid_to_friendly_name(&pk_oid)
+            registry
+                .get(&x509.public_key().algorithm.algorithm)
+                .unwrap()
+                .description()
         );
 
-        let sig_oid = x509.signature_algorithm.algorithm.to_id_string();
         println!(
             "   {}: {}",
             "Signature Algorithm".cyan(),
-            oid_to_friendly_name(&sig_oid)
+            registry
+                .get(&x509.signature_algorithm.algorithm)
+                .unwrap()
+                .description()
         );
     }
 
     Ok(())
-}
-
-fn oid_to_friendly_name(oid: &str) -> &str {
-    // This is a small subset of common OIDs.
-    // The official registry is maintained by IANA.
-    // Example: https://oid-base.com/cgi-bin/display?oid=1.2.840.10045.2.1&a=display
-    match oid {
-        "1.2.840.10045.2.1" => "ecPublicKey",
-        "1.2.840.113549.1.1.1" => "rsaEncryption",
-        "1.2.840.113549.1.1.11" => "sha256WithRSAEncryption",
-        "1.2.840.10045.4.3.2" => "ecdsa-with-SHA256",
-        _ => oid,
-    }
 }
