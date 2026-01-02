@@ -1,3 +1,4 @@
+use colored::Colorize;
 /// # TLS Inspect CLI
 ///
 /// A command-line tool for inspecting TLS/SSL certificates and connections.
@@ -100,12 +101,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let label = if i == 0 { "Leaf" } else { "Intermediate" };
         let (_, x509) = X509Certificate::from_der(cert.as_ref())?;
 
-        println!("[{}] {}", label, x509.subject());
-        println!("   Issuer:    {}", x509.issuer());
-        println!("   Valid from: {}", x509.validity().not_before);
-        println!("   Valid to:   {}", x509.validity().not_after);
-        println!("   Serial:    {}", x509.raw_serial_as_string());
-        println!("   Algorithm: {}", x509.public_key().algorithm.algorithm);
+        println!("[{}] {}", label.yellow(), x509.subject().to_string().bold());
+        println!("   {}: {}", "Issuer".cyan(), x509.issuer());
+        println!("   {}: {}", "Valid from".cyan(), x509.validity().not_before);
+        println!("   {}:   {}", "Valid to".cyan(), x509.validity().not_after);
+        println!("   {}:    {}", "Serial".cyan(), x509.raw_serial_as_string());
+        println!("   {}: {}", "Algorithm".cyan(), x509.public_key().algorithm.algorithm);
     }
 
     Ok(())
