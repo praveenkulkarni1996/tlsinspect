@@ -1,6 +1,6 @@
 [package]
 name = "tlsinspect"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Praveen Pramod Kulkarni <praveenkulkarni1996@gmail.com>"]
 description = "A CLI for inspecting TLS certificate chains and IP overrides."
